@@ -6,6 +6,7 @@
 import numpy as np
 cimport numpy as cnp
 from libc.math cimport sqrt, atan2
+from six.moves import range
 
 # @cython.boundscheck(False)
 def _shapecontext(cnp.ndarray[cnp.float64_t, ndim=2] image, 
@@ -76,9 +77,9 @@ def _shapecontext(cnp.ndarray[cnp.float64_t, ndim=2] image,
     cdef int r_max_int = int(r_max)
 
 
-    for x in xrange(max(current_pixel_x - r_max_int, 0), 
+    for x in range(max(current_pixel_x - r_max_int, 0), 
                     min(current_pixel_x + r_max_int, cols)):
-        for y in xrange(max(current_pixel_y - r_max_int, 0), 
+        for y in range(max(current_pixel_y - r_max_int, 0), 
                         min(current_pixel_y + r_max_int, rows)):
             if image[x, y] != 0: # if pixel is zero no need to consider it
 
