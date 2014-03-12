@@ -1,19 +1,14 @@
-# -*- python -*-
 #cython: cdivision=True
+#cython: boundscheck=False
+#cython: nonecheck=False
+#cython: wraparound=False
 
-# Most of the code is based on Brian's code in PR #235
-# with minor changes
-
-import cython
 import numpy as np
-cimport numpy as np
+cimport numpy as cnp
+from libc.math cimport sqrt, atan2
 
-cdef extern from "math.h":
-    float sqrt(float x)
-    float atan2(float y, float x)
-
-@cython.boundscheck(False)
-def _shapecontext(np.ndarray[np.float64_t, ndim=2] image, 
+# @cython.boundscheck(False)
+def _shapecontext(cnp.ndarray[cnp.float64_t, ndim=2] image, 
                   float r_min, float r_max,
                   int current_pixel_x, int current_pixel_y, 
                   int radial_bins=5, int polar_bins=12):
@@ -69,13 +64,13 @@ def _shapecontext(np.ndarray[np.float64_t, ndim=2] image,
     if r_min <= 0:
         r_min = 1
 
-    cdef np.ndarray[np.float64_t, ndim=1] r_array = \
+    cdef cnp.ndarray[cnp.float64_t, ndim=1] r_array = \
         np.logspace(np.log10(r_min), np.log10(r_max), radial_bins + 1, base=10)
     
-    cdef np.ndarray[np.float64_t, ndim=1] theta_array = \
+    cdef cnp.ndarray[cnp.float64_t, ndim=1] theta_array = \
         np.linspace(-np.pi, np.pi, polar_bins + 1)
 
-    cdef np.ndarray[np.float64_t, ndim=2] bin_histogram = \
+    cdef cnp.ndarray[cnp.float64_t, ndim=2] bin_histogram = \
         np.zeros((radial_bins, polar_bins), dtype=float)
 
     cdef int r_max_int = int(r_max)
